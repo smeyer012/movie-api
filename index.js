@@ -65,6 +65,14 @@ app.get('/movies', (req, res) => {
 app.use(morgan('common'));
 
 
+//// Handle Errors
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+
 //// Listen
 
 app.listen(8080, () => {
