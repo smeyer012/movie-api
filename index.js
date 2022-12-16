@@ -189,62 +189,16 @@ app.get('/movies', (req, res) => {
 app.get('/movies/:title', (req, res) => {
     res.json(movies.find((movie) =>
     { return movie.title === req.params.title }));
-
-
-    // let movie = movies.find((movie) => { return movie.title === req.params.title });
-
-    // if(movie) {
-    //     console.log('Movie: ' + movie.title);
-    //     console.log('Director: ' + movie.director);
-    //     let genres = movie.genres;
-    //     console.log('Genre: ' + genres.toString()); 
-    //     res.status(201).send('' + movie.title);
-    // } else {
-    //     res.status(404).send('The movie, ' + req.params.title + ', was not found.');
-    // }
-
 });
 
 // Get information about a genre
 app.get('/genres/:genre', (req, res) => {   
-    res.json(genres.find((genre) => { return genre.genre === req.params.genre }));
-
-
-    // let genre = genres.find((genre) => { return genre.genre === req.params.genre });
-
-    // if(genre) {
-    //     console.log('Genre: ' + genre.genre);
-    //     console.log('Description: ' + genre.description); 
-    //     res.status(201).send('' + genre.genre);
-    // } else {
-    //     res.status(404).send('The genre, ' + req.params.genre + ', was not found.');
-    // }
-    
+    res.json(genres.find((genre) => { return genre.genre === req.params.genre }));   
 });
 
 // Get information about a director
 app.get('/directors/:director', (req, res) => {
     res.json(director = directors.find((director) => { return director.name === req.params.director }));
-
-
-    // let director = directors.find((director) => { return director.name === req.params.director });
-
-    // if(director) {
-    //     console.log('Director: ' + director.name);
-    //     let dirMovies = director.movies,
-    //         movienames = [],
-    //         i = 0;
-    //     dirMovies.forEach(function(element) { 
-    //         let movieObj = movies.find((movieObj) => { return movieObj.id === element });
-    //         movienames[i] += movieObj.name;
-    //         i++;
-    //     });
-    //     console.log('Movies: ' + movienames.toString()); 
-    //     res.status(201).send('' + director.name);
-    // } else {
-    //     res.status(404).send('The director, ' + req.params.director + ', was not found.');
-    // }
-
 });
 
 // Get list of all users
