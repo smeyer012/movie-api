@@ -46,32 +46,55 @@
                     <td>A JSON object holding data about all movies</td>
                 </tr>
                 <tr>
-                    <td>Get list of all movies by director</td>
-                    <td>/movies/[director]</td>
-                    <td>GET</td>
-                    <td>A JSON object holding data about all movies by director</td>
-                </tr>
-                <tr>
-                    <td>Get list of all movies by genre</td>
-                    <td>/movies/[genre]</td>
-                    <td>GET</td>
-                    <td>A JSON object holding data about all movies by genre</td>
-                </tr>
-                <tr>
-                    <td>Get information about a movie by title</td>
-                    <td>/movies/[Title]</td>
+                    <td>Get information about a movie by title or ID</td>
+                    <td>/movies/[Title or ID]</td>
                     <td>GET</td>
                     <td>A JSON object holding data about a movie</td>
                 </tr>
                 <tr>
-                    <td>Get information about a genre</td>
-                    <td>/genres/[genre]</td>
+                    <td>Update a movie by ID and with JSON</td>
+                    <td>/movies/[ID] <br/>
+                        JSON in this format <br/>
+                        {<br/>
+                            "Title": "String",(required)<br/>
+                            "Description": "String",(required)<br/>
+                            "Genre": ["ID", "ID"...],<br/>
+                            "Director": ["ID", "ID"...],<br/>
+                            "Actors": ["Name", "Name"...],<br/>
+                            "ImagePath": "String",<br/>
+                            "Featured": Boolean<br/>
+                        }</td>
+                    <td>PUT</td>
+                    <td>A JSON object holding data about a movie</td>
+                </tr>
+                    <td>/user/[Username] <br/>
+                        JSON in this format <br/>
+                        {<br/>
+                            
+                        }</td>
+                    <td>PUT</td>
+                    <td>The updated document</td>
+                <tr>
+                    <td>Get list of all genres</td>
+                    <td>/genres</td>
+                    <td>GET</td>
+                    <td>A JSON object holding data about all genres</td>
+                </tr>
+                <tr>
+                    <td>Get information about a genre name or ID</td>
+                    <td>/genres/[Genre or ID]</td>
                     <td>GET</td>
                     <td>A JSON object holding data about a genre</td>
                 </tr>
                 <tr>
-                    <td>Get information about a director</td>
-                    <td>/directors/[director]</td>
+                    <td>Get list of all directors</td>
+                    <td>/directors</td>
+                    <td>GET</td>
+                    <td>A JSON object holding data about all directors</td>
+                </tr>
+                <tr>
+                    <td>Get information about a director's name or ID</td>
+                    <td>/directors/[Director or ID]</td>
                     <td>GET</td>
                     <td>A JSON object holding data about a director</td>
                 </tr>
@@ -82,47 +105,79 @@
                     <td>A JSON object holding data about all users</td>
                 </tr>
                 <tr>
-                    <td>Get a user's data by ID or username</td>
-                    <td>/users/[ID or username]</td>
+                    <td>Get a user's data by Username or ID</td>
+                    <td>/users/[Username or ID]</td>
                     <td>GET</td>
                     <td>A JSON object holding data about a movie</td>
                 </tr>
                 <tr>
-                    <td>Add a user by username</td>
-                    <td>/users/[username]</td>
+                    <td>Add a user with JSON</td>
+                    <td>/users <br/>
+                        JSON in this format <br/>
+                        {<br/>
+                          "Username": "String", (required)<br/>
+                          "Password": "String", (required)<br/>
+                          "Email": "String", (required)<br/>
+                          "Birthday": "YYYY-MM-DD"<br/>
+                        }</td>
                     <td>POST</td>
-                    <td>A message indicating that addition of user was successful</td>
+                    <td>A JSON object holding data about the user</td>
                 </tr>
                 <tr>
-                    <td>Deletes a user by ID or username</td>
-                    <td>/users/[ID or username]</td>
+                    <td>Update a user with JSON</td>
+                    <td>/user/[Username] <br/>
+                        JSON in this format <br/>
+                        {<br/>
+                            "Username": "String", (required)<br/>
+                            "Password": "String", (required)<br/>
+                            "Email": "String", (required)<br/>
+                            "Birthday": "YYYY-MM-DD"<br/>
+                        }</td>
+                    <td>PUT</td>
+                    <td>The updated document</td>
+                </tr>
+                <tr>
+                    <td>Deletes a user by username</td>
+                    <td>/users/[username]</td>
                     <td>DELETE</td>
                     <td>A message indicating that removal of user was successful</td>
                 </tr>
                 <tr>
+                    <td>Add a movie to user's list of favorites by username</td>
+                    <td>/users/[username]/movies/[MovieID]</td>
+                    <td>POST</td>
+                    <td>The updated document</td>
+                </tr>
+                <tr>
+                    <td>Remove a movie from user's list of favorites by ID or username</td>
+                    <td>/users/[ID or username]/movies/[MovieID]</td>
+                    <td>DELETE</td>
+                    <td>The updated document</td>
+                </tr>
+                <!-- <tr>
+                    <td>Get list of all movies by director</td>
+                    <td>/movies/[director]</td>
+                    <td>GET</td>
+                    <td>A JSON object holding data about all movies by director</td>
+                </tr>
+                <tr>
+                    <td>Get list of all movies by genre</td>
+                    <td>/movies/[genre]</td>
+                    <td>GET</td>
+                    <td>A JSON object holding data about all movies by genre</td>
+                </tr> -->
+                <!-- <tr>
                     <td>Add or update a user's information by ID or username (add or update username, password, email, date of birth, etc) ** Note: a user's ID cannot be changed</td>
                     <td>/users/[ID or username]/:datatype/:data</td>
                     <td>PUT</td>
                     <td>A message indicating that update of user's information was successful</td>
-                </tr>
-                <tr>
+                </tr> -->
+                <!-- <tr>
                     <td>Removes a user's information by ID or username (remove password, email, date of birth, etc) ** Note: a user's ID or username cannot be removed</td>
                     <td>/users/[ID or username]/:datatype/:data</td>
                     <td>PUT</td>
                     <td>A message indicating that update of user's information was successful</td>
-                </tr>
-                <tr>
-                    <td>Add a movie to user's list of favorites by ID or username</td>
-                    <td>/users/[ID or username]/favorites/[Movie]</td>
-                    <td>PUT</td>
-                    <td>A message indicating that addition of movie to user's favorites was successful</td>
-                </tr>
-                <tr>
-                    <td>Remove a movie from user's list of favorites by ID or username</td>
-                    <td>/users/[ID or username]/favorites/[Movie]</td>
-                    <td>DELETE</td>
-                    <td>A message indicating that removal of movie from user's favorites was successful</td>
-                </tr>
+                </tr> -->
             </tbody>
         </table>
     </body>
