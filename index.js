@@ -12,6 +12,8 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const ObjectId = mongoose.Types.ObjectId
 
+const Users = Models.User; // makes users directly accessible for authentication
+
 // This allows for bracket notation in order to use the request parameter as a variable, minimizing code redundancy
 const myModels = {
     movies: Models.Movie,
@@ -24,15 +26,19 @@ mongoose.set('strictQuery',false); // used to satisfy a deprecation warning
 
 mongoose.connect('mongodb://0.0.0.0:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
+
 //// GET requests
 
 // Welcome msg
-app.get('/', (req, res) => {
+app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.send('Welcome!');
 });
 
 // Get all movies/users/directors/genres
-app.get('/:dataType', (req, res) => {
+app.get('/:dataType', passport.authenticate('jwt', { session: false }), (req, res) => {
     myModels[req.params.dataType].find()
       .then((data) => {
         res.status(201).json(data);
@@ -44,7 +50,7 @@ app.get('/:dataType', (req, res) => {
 });
 
 // Get information about a movie/user/director/genre by title/name/username/id
-app.get('/:dataType/:data', (req, res) => {
+app.get('/:dataType/:data', passport.authenticate('jwt', { session: false }), (req, res) => {
   let dataName = req.params.data;
   if(ObjectId.isValid(req.params.data)){
     myModels[req.params.dataType].findOne({_id: req.params.data})
@@ -79,7 +85,7 @@ app.get('/:dataType/:data', (req, res) => {
   Email: String,(required)
   Birthday: Date
 }*/
-app.post('/users', (req, res) => {
+app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
     myModels['users'].findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
@@ -113,7 +119,7 @@ app.post('/users', (req, res) => {
   Email: String,(required)
   Birthday: Date
 }*/
-app.put('/users/:Username', (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   myModels['users'].findOneAndUpdate({ Username: req.params.Username }, { $set:
       {
         Username: req.body.Username,
@@ -134,7 +140,7 @@ app.put('/users/:Username', (req, res) => {
 });
 
 // Add a movie to a user's list of favorites
-app.post('/users/:Username/movies/:MovieID', (req, res) => {
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     myModels['users'].findOneAndUpdate({ Username: req.params.Username }, {
        $push: { Favorites: req.params.MovieID }
      },
@@ -150,7 +156,7 @@ app.post('/users/:Username/movies/:MovieID', (req, res) => {
 });
 
 // Remove a movie to a user's list of favorites
-app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     myModels['users'].findOneAndUpdate({ Username: req.params.Username }, {
        $pull: { Favorites: req.params.MovieID }
      },
@@ -167,7 +173,7 @@ app.delete('/users/:Username/movies/:MovieID', (req, res) => {
 
 
 // Delete a user by username
-app.delete('/users/:Username', (req, res) => {
+app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     myModels['users'].findOneAndRemove({ Username: req.params.Username })
       .then((user) => {
         if (!user) {
@@ -193,7 +199,7 @@ app.delete('/users/:Username', (req, res) => {
   ImagePath: String,
   Featured: Boolean
 }*/
-app.put('/movies/:ID', (req, res) => {
+app.put('/movies/:ID', passport.authenticate('jwt', { session: false }), (req, res) => {
   myModels['movies'].findOneAndUpdate({ _id: req.params.ID }, { $set:
       {
         Title: req.body.Title,
