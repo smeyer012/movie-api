@@ -27,8 +27,24 @@ mongoose.set('strictQuery',false); // used to satisfy a deprecation warning
 mongoose.connect('mongodb://0.0.0.0:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 let auth = require('./auth')(app);
+
+const cors = require('cors');
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
+
 const passport = require('passport');
 require('./passport');
+
+const { check, validationResult } = require('express-validator');
 
 //// GET requests
 
@@ -85,7 +101,22 @@ app.get('/:dataType/:data', passport.authenticate('jwt', { session: false }), (r
   Email: String,(required)
   Birthday: Date
 }*/
-app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.post('/users', passport.authenticate('jwt', { session: false }), 
+  [
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ], (req, res) => {
+    
+    // check the validation object for errors
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    
     myModels['users'].findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
@@ -94,7 +125,7 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
             myModels['users']
             .create({
               Username: req.body.Username,
-              Password: req.body.Password,
+              Password: hashedPassword,
               Email: req.body.Email,
               Birthday: req.body.Birthday
             })
@@ -109,6 +140,7 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
         console.error(error);
         res.status(500).send('Error: ' + error);
       });
+
 });
 
 // Update a user's info, by username
@@ -238,6 +270,7 @@ app.use((err, req, res, next) => {
 
 //// Listen
 
-app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+ console.log('Listening on Port ' + port);
 });
