@@ -29,7 +29,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/myFlixDB', { useNewUrlParser: true, us
 let auth = require('./auth')(app);
 
 const cors = require('cors');
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+let allowedOrigins = ['http://localhost:8080', 'https://myflix-tnv9.onrender.com/'];
 app.use(cors({
   origin: (origin, callback) => {
     if(!origin) return callback(null, true);
