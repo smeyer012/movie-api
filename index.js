@@ -24,7 +24,8 @@ const myModels = {
 
 mongoose.set('strictQuery', false); // used to satisfy a deprecation warning
 
-mongoose.connect('mongodb://0.0.0.0:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect('mongodb://0.0.0.0:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 let auth = require('./auth')(app);
 
