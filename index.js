@@ -1,5 +1,3 @@
-/* sets up endpoints */
-
 const express = require('express'),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
@@ -31,7 +29,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/myFlixDB', { useNewUrlParser: true, us
 let auth = require('./auth')(app);
 
 const cors = require('cors');
-let allowedOrigins = ['http://localhost:8080', 'https://meek-kitsune-7217f4.netlify.app/'];
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
@@ -105,7 +103,7 @@ app.get('/:dataType/:data', passport.authenticate('jwt', { session: false }), (r
   Email: String,(required)
   Birthday: Date
 }*/
-app.post('/users',
+app.post('/users', passport.authenticate('jwt', { session: false }),
   [
     check('Username', 'Username is required').isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
