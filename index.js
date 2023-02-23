@@ -55,7 +55,7 @@ app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
 });
 
 // Get all movies/users/directors/genres
-app.get('/:dataType', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/:dataType', (req, res) => {
   myModels[req.params.dataType].find()
     .then((data) => {
       res.status(201).json(data);
